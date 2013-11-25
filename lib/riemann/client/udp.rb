@@ -13,7 +13,12 @@ module Riemann
       end
 
       def connect
-        @socket = UDPSocket.new
+        ai = Addrinfo.udp(@host, @port)
+        if ai.ipv6?
+          @socket = UDPSocket.new(Socket::AF_INET6)
+        else
+          @socket = UDPSocket.new
+        end
       end
 
       def close
